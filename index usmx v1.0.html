@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USMX Logistics | Soluciones Logísticas Globales</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* THEME A — ACTIVE */
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-dark: #0f172a;
+    --text-primary: #0f172a;
+    --text-muted: #475569;
+    --accent-primary: #991b1b;
+    --accent-primary-dark: #7f1d1d;
+    --accent-status: #047857;
+    --border-color: #e2e8f0;
+    --text-inverse: #f8fafc;
+  }
+  
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-main);
+    color:var(--text-primary);
+    font-family:'Inter',sans-serif;
+  }
+  h1,h2,h3,.font-display{font-family:'Manrope',sans-serif;}
+  .text-burgundy{color:var(--accent-primary);}
+  .bg-accent{background:var(--accent-primary);}
+  .bg-accent-dark{background:var(--accent-primary-dark);}
+  .border-accent{border-color:var(--accent-primary);}
+  .bg-surface{background:var(--bg-card);}
+  .bg-deep{background:var(--bg-dark);}
+  .text-muted{color:var(--text-muted);}
+  .border-soft{border-color:var(--border-color);}
+
+  /* HEADER CONTRASTE CORREGIDO */
+  .navbar-pill{
+    background:rgba(255, 255, 255, 0.95);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid rgba(148, 163, 184, 0.6); /* Borde más oscuro para contraste */
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08); /* Sombra para resaltarlo del fondo */
+  }
+  
+  .nav-link{position:relative;color:var(--text-muted);transition:color .25s ease;}
+  .nav-link:hover{color:var(--text-primary);}
+  .nav-link::after{
+    content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;
+    background:var(--accent-primary);transition:width .25s ease;
+  }
+  .nav-link:hover::after{width:100%;}
+
+  .btn-primary{
+    background:var(--accent-primary);color:var(--text-inverse);
+    transition:background .25s ease, transform .2s ease;
+  }
+  .btn-primary:hover{background:var(--accent-primary-dark);transform:translateY(-1px);}
+
+  .hero-bg{
+    background:
+      radial-gradient(1200px 500px at 15% 0%, rgba(153,27,27,0.06), transparent 60%),
+      radial-gradient(1000px 500px at 100% 20%, rgba(15,23,42,0.05), transparent 60%),
+      var(--bg-main);
+  }
+
+  .service-card{
+    border:1px solid var(--border-color);
+    transition:border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+  }
+  .service-card:hover{
+    border-color:var(--accent-primary);
+    transform:translateY(-4px);
+    box-shadow:0 12px 30px -12px rgba(15,23,42,0.18);
+  }
+
+  .split-card{
+    border:1px solid var(--border-color);
+    transition:box-shadow .3s ease, transform .3s ease;
+  }
+  .split-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px -18px rgba(15,23,42,0.2);}
+
+  .pillar-card{
+    background:rgba(248,250,252,0.04);
+    border:1px solid rgba(248,250,252,0.12);
+    transition:border-color .3s ease, background .3s ease;
+  }
+  .pillar-card:hover{border-color:rgba(153,27,27,0.6);background:rgba(248,250,252,0.06);}
+
+  .badge-chip{
+    border:1px solid rgba(4,120,87,0.25);
+    background:rgba(4,120,87,0.06);
+    color:var(--accent-status);
+  }
+
+  /* Mobile drawer */
+  #mobile-drawer{
+    transform:translateX(100%);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  #mobile-drawer.open{transform:translateX(0);}
+  #drawer-overlay{
+    opacity:0;pointer-events:none;transition:opacity .35s ease;
+  }
+  #drawer-overlay.open{opacity:1;pointer-events:auto;}
+
+  /* Modal */
+  .modal-overlay{
+    opacity:0;pointer-events:none;transition:opacity .25s ease;
+  }
+  .modal-overlay.open{opacity:1;pointer-events:auto;}
+  .modal-box{
+    transform:scale(.94);opacity:0;transition:transform .25s ease, opacity .25s ease;
+  }
+  .modal-overlay.open .modal-box{transform:scale(1);opacity:1;}
+
+  input:focus, textarea:focus, button:focus-visible, a:focus-visible{
+    outline:2px solid var(--accent-primary);outline-offset:2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ============ HEADER: NAVEGACIÓN IZQ, LOGO CENTRO, BOTÓN DER ============ -->
+<header class="fixed top-4 left-0 right-0 z-50 px-4">
+  <div class="navbar-pill max-w-6xl mx-auto rounded-full px-5 md:px-6 py-3 flex items-center justify-between relative">
+
+    <!-- IZQUIERDA: Menú de Navegación (Oculto en móvil) -->
+    <div class="hidden lg:flex flex-1 justify-start">
+      <nav class="flex items-center gap-7 text-sm font-medium">
+        <a href="#inicio" class="nav-link">Inicio</a>
+        <a href="#alcance" class="nav-link">Alcance</a>
+        <a href="#compromisos" class="nav-link">Compromisos</a>
+        <a href="#servicios" class="nav-link">Servicios</a>
+      </nav>
+    </div>
+
+    <!-- CENTRO: Logo centrado de forma absoluta en Desktop -->
+    <div class="flex-shrink-0 lg:absolute lg:left-1/2 lg:-translate-x-1/2">
+      <a href="#inicio" class="font-display font-extrabold text-xl tracking-tight text-slate-900">
+        USMX <span class="text-burgundy">LOGISTICS</span>
+      </a>
+    </div>
+
+    <!-- DERECHA: Botón de contacto y Menú Hamburguesa -->
+    <div class="flex-1 flex justify-end items-center">
+      <div class="hidden lg:block">
+        <a href="#contacto" class="btn-primary text-sm font-semibold px-6 py-2.5 rounded-full whitespace-nowrap">
+          Contactar Especialista
+        </a>
+      </div>
+
+      <!-- Botón Hamburguesa (solo móvil) -->
+      <button id="menu-toggle" aria-label="Abrir menú" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full border border-slate-300 bg-white hover:bg-slate-50 transition-colors shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ============ MOBILE DRAWER ============ -->
+<div id="drawer-overlay" class="fixed inset-0 bg-slate-900/50 z-[60] backdrop-blur-sm"></div>
+<aside id="mobile-drawer" class="fixed top-0 right-0 h-full w-[82%] max-w-sm bg-surface z-[70] shadow-2xl flex flex-col">
+  <div class="flex items-center justify-between px-6 py-6 border-b border-soft">
+    <span class="font-display font-extrabold text-lg text-slate-900">USMX <span class="text-burgundy">LOGISTICS</span></span>
+    <button id="menu-close" aria-label="Cerrar menú" class="w-9 h-9 flex items-center justify-center rounded-full border border-soft">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+  <nav class="flex flex-col px-6 py-8 gap-6 text-base font-medium text-slate-700">
+    <a href="#inicio" class="drawer-link">Inicio</a>
+    <a href="#alcance" class="drawer-link">Alcance</a>
+    <a href="#compromisos" class="drawer-link">Compromisos</a>
+    <a href="#servicios" class="drawer-link">Servicios</a>
+    <a href="#contacto" class="drawer-link">Contacto</a>
+  </nav>
+  <div class="mt-auto px-6 pb-10">
+    <a href="#contacto" class="btn-primary block text-center font-semibold px-5 py-3 rounded-full">Contactar Especialista</a>
+  </div>
+</aside>
+
+<!-- ============ HERO / PORTADA ============ -->
+<section id="inicio" class="hero-bg min-h-screen flex items-center pt-32 pb-20 px-6">
+  <div class="max-w-5xl mx-auto text-center" data-aos="zoom-in" data-aos-duration="700">
+    <span class="inline-block text-xs font-semibold tracking-widest uppercase text-burgundy mb-6">
+      Corredor México · Estados Unidos · Mundo
+    </span>
+    <h1 class="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl leading-[1.08] tracking-tight text-slate-900 mb-6">
+      Soluciones Logísticas Globales<br class="hidden sm:block"> de Alto Rendimiento
+    </h1>
+    <p class="text-muted text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-10">
+      Orquestación estratégica de cadenas de suministro internacionales. Basados en México, con ADN de integración transfronteriza y alcance operativo en los principales mercados del mundo.
+    </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
+      <a href="#contacto" class="btn-primary font-semibold px-7 py-3.5 rounded-full">Contactar Especialista</a>
+      <a href="#servicios" class="font-semibold px-7 py-3.5 rounded-full border border-soft text-slate-700 hover:border-slate-400 transition-colors">Ver Servicios</a>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+      <span class="badge-chip rounded-full px-4 py-2 text-sm font-medium">Coordinación Worldwide (Asia, Europa, Américas)</span>
+      <span class="badge-chip rounded-full px-4 py-2 text-sm font-medium">Gestión End-to-End Sin Intermediarios Complejos</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ALCANCE GLOBAL ============ -->
+<section id="alcance" class="py-24 px-6 bg-surface">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-14" data-aos="zoom-in" data-aos-delay="150">
+      <h2 class="font-display font-extrabold text-3xl md:text-4xl text-slate-900 mb-4">
+        Alcance Global: Soluciones de Importación y Exportación
+      </h2>
+      <p class="text-muted text-lg">
+        Gestión administrativa y logística de mercancías entrantes y salientes.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="split-card bg-white rounded-2xl p-9" data-aos="zoom-in" data-aos-delay="150">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-burgundy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 15l4-4 3 3 5-6" />
+          </svg>
+        </div>
+        <h3 class="font-display font-bold text-xl text-slate-900 mb-3">Importación a México</h3>
+        <p class="text-muted leading-relaxed">
+          Administramos la recolección en origen (Asia, Europa, Norteamérica), flete internacional, supervisión aduanal y entrega final.
+        </p>
+      </div>
+
+      <div class="split-card bg-white rounded-2xl p-9" data-aos="zoom-in" data-aos-delay="250">
+        <div class="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-burgundy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 3v18H3M17 9l-4 4-3-3-5 6" />
+          </svg>
+        </div>
+        <h3 class="font-display font-bold text-xl text-slate-900 mb-3">Exportación Global</h3>
+        <p class="text-muted leading-relaxed">
+          Salida eficiente de productos mexicanos con fortaleza operativa en el corredor México-EE. UU. y conexiones marítimas/aéreas internacionales.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPROMISOS ============ -->
+<section id="compromisos" class="bg-deep py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-14" data-aos="zoom-in" data-aos-delay="200">
+      <h2 class="font-display font-extrabold text-3xl md:text-4xl mb-4" style="color:var(--text-inverse)">
+        Compromisos y Filosofía Operativa
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="pillar-card rounded-2xl p-8" data-aos="zoom-in" data-aos-delay="200">
+        <span class="text-burgundy text-sm font-semibold tracking-widest uppercase">01</span>
+        <h3 class="font-display font-bold text-xl mt-4 mb-3" style="color:var(--text-inverse)">Transparencia Tarifaria</h3>
+        <p class="leading-relaxed" style="color:#94a3b8">
+          Cotizaciones integrales sin cargos ocultos ni sorpresas en destino.
+        </p>
+      </div>
+      <div class="pillar-card rounded-2xl p-8" data-aos="zoom-in" data-aos-delay="300">
+        <span class="text-burgundy text-sm font-semibold tracking-widest uppercase">02</span>
+        <h3 class="font-display font-bold text-xl mt-4 mb-3" style="color:var(--text-inverse)">Trazabilidad Proactiva</h3>
+        <p class="leading-relaxed" style="color:#94a3b8">
+          Monitoreo constante y comunicación directa en cada etapa del tránsito.
+        </p>
+      </div>
+      <div class="pillar-card rounded-2xl p-8" data-aos="zoom-in" data-aos-delay="400">
+        <span class="text-burgundy text-sm font-semibold tracking-widest uppercase">03</span>
+        <h3 class="font-display font-bold text-xl mt-4 mb-3" style="color:var(--text-inverse)">Optimización Continuada</h3>
+        <p class="leading-relaxed" style="color:#94a3b8">
+          Diseño de rutas multimodales adaptadas a los tiempos y presupuesto de su empresa.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICIOS ============ -->
+<section id="servicios" class="py-24 px-6 bg-surface">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-14" data-aos="zoom-in">
+      <h2 class="font-display font-extrabold text-3xl md:text-4xl text-slate-900 mb-4">
+        Administración Integral de Servicios Logísticos
+      </h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="service-card bg-white rounded-2xl p-7" data-aos="zoom-in" data-aos-delay="0">
+        <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-burgundy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 17l4-9 4 9M3 17h8M15 6h6M18 3v10M13 20h8"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-slate-900 mb-2 leading-snug">Coordinación de Carga Marítima &amp; Aérea Internacional</h3>
+      </div>
+      <div class="service-card bg-white rounded-2xl p-7" data-aos="zoom-in" data-aos-delay="100">
+        <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-burgundy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13h13l3 5H6l-3-5zM3 13V6h9v7M16 18a2 2 0 104 0 2 2 0 00-4 0zM6 18a2 2 0 104 0 2 2 0 00-4 0z"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-slate-900 mb-2 leading-snug">Gestión de Transporte Terrestre y Cruce Transfronterizo</h3>
+      </div>
+      <div class="service-card bg-white rounded-2xl p-7" data-aos="zoom-in" data-aos-delay="200">
+        <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-burgundy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M5 3h14a1 1 0 011 1v16l-4-2-3 2-3-2-3 2-3-2V4a1 1 0 011-1z"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-slate-900 mb-2 leading-snug">Administración de Trámites y Despacho Aduanal</h3>
+      </div>
+      <div class="service-card bg-white rounded-2xl p-7" data-aos="zoom-in" data-aos-delay="300">
+        <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-burgundy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-slate-900 mb-2 leading-snug">Supervisión y Auditoría de Proveedores de Transporte</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section id="contacto" class="py-24 px-6 bg-main" style="background:var(--bg-main)">
+  <div class="max-w-3xl mx-auto" data-aos="zoom-in">
+    <div class="text-center mb-12">
+      <h2 class="font-display font-extrabold text-3xl md:text-4xl text-slate-900 mb-4">Hable con un Especialista</h2>
+      <p class="text-muted text-lg">Envíenos los detalles de su operación y le responderemos a la brevedad.</p>
+    </div>
+
+    <form id="contact-form" class="bg-white border border-soft rounded-2xl p-8 md:p-10 grid gap-5 shadow-sm">
+      <div class="grid md:grid-cols-2 gap-5">
+        <div>
+          <label for="nombre" class="block text-sm font-semibold text-slate-700 mb-2">Nombre completo</label>
+          <input required id="nombre" name="nombre" type="text" class="w-full rounded-xl border border-soft px-4 py-3 text-slate-800 bg-white" placeholder="Su nombre">
+        </div>
+        <div>
+          <label for="empresa" class="block text-sm font-semibold text-slate-700 mb-2">Empresa</label>
+          <input required id="empresa" name="empresa" type="text" class="w-full rounded-xl border border-soft px-4 py-3 text-slate-800 bg-white" placeholder="Nombre de su empresa">
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <div>
+          <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Correo electrónico</label>
+          <input required id="email" name="email" type="email" class="w-full rounded-xl border border-soft px-4 py-3 text-slate-800 bg-white" placeholder="correo@empresa.com">
+        </div>
+        <div>
+          <label for="telefono" class="block text-sm font-semibold text-slate-700 mb-2">Teléfono</label>
+          <input id="telefono" name="telefono" type="tel" class="w-full rounded-xl border border-soft px-4 py-3 text-slate-800 bg-white" placeholder="+52 55 0000 0000">
+        </div>
+      </div>
+      <div>
+        <label for="mensaje" class="block text-sm font-semibold text-slate-700 mb-2">Mensaje</label>
+        <textarea required id="mensaje" name="mensaje" rows="4" class="w-full rounded-xl border border-soft px-4 py-3 text-slate-800 bg-white" placeholder="Cuéntenos sobre su operación logística"></textarea>
+      </div>
+      <button type="submit" class="btn-primary font-semibold px-7 py-3.5 rounded-full justify-self-start mt-2">
+        Enviar Solicitud
+      </button>
+      <p class="text-xs text-muted">Al enviar, su solicitud será dirigida a contact@usmxlogistics.com</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ MODAL DE CONFIRMACIÓN ============ -->
+<div id="confirm-modal" class="modal-overlay fixed inset-0 bg-slate-900/60 z-[80] flex items-center justify-center px-6">
+  <div class="modal-box bg-white rounded-2xl max-w-md w-full p-8 text-center">
+    <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" style="color:var(--accent-status)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+    <h3 class="font-display font-bold text-xl text-slate-900 mb-2">Solicitud enviada</h3>
+    <p class="text-muted mb-7">Gracias por contactar a USMX Logistics. Un especialista se comunicará con usted a la brevedad a través de contact@usmxlogistics.com.</p>
+    <button id="modal-close" class="btn-primary font-semibold px-7 py-3 rounded-full w-full">Cerrar</button>
+  </div>
+</div>
+
+<!-- ============ MODAL LEGAL (Términos / Privacidad) ============ -->
+<div id="legal-modal" class="modal-overlay fixed inset-0 bg-slate-900/60 z-[80] flex items-center justify-center px-6">
+  <div class="modal-box bg-white rounded-2xl max-w-lg w-full p-8 max-h-[80vh] overflow-y-auto">
+    <h3 id="legal-title" class="font-display font-bold text-xl text-slate-900 mb-4">Términos y Condiciones</h3>
+    <div id="legal-body" class="text-muted text-sm leading-relaxed space-y-3"></div>
+    <button id="legal-close" class="btn-primary font-semibold px-7 py-3 rounded-full w-full mt-7">Cerrar</button>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-deep py-14 px-6">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
+    <div class="text-center md:text-left">
+      <span class="font-display font-extrabold text-lg" style="color:var(--text-inverse)">USMX <span class="text-burgundy">LOGISTICS</span></span>
+      <p class="mt-3 text-sm" style="color:#94a3b8">contact@usmxlogistics.com</p>
+    </div>
+
+    <nav class="flex flex-wrap items-center justify-center gap-6 text-sm" style="color:#94a3b8">
+      <a href="#inicio" class="hover:text-white transition-colors">Inicio</a>
+      <a href="#alcance" class="hover:text-white transition-colors">Alcance</a>
+      <a href="#compromisos" class="hover:text-white transition-colors">Compromisos</a>
+      <a href="#servicios" class="hover:text-white transition-colors">Servicios</a>
+      <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
+    </nav>
+
+    <div class="flex flex-wrap items-center justify-center gap-6 text-sm" style="color:#94a3b8">
+      <button class="legal-trigger hover:text-white transition-colors" data-type="terms">Términos</button>
+      <button class="legal-trigger hover:text-white transition-colors" data-type="privacy">Privacidad</button>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto mt-10 pt-8 border-t text-center text-xs" style="border-color:rgba(248,250,252,0.1);color:#64748b">
+    © 2026 USMX Logistics. Todos los derechos reservados.
+  </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  // Envolver la lógica en DOMContentLoaded asegura que todos los elementos existan en el DOM antes de asignar eventos.
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    AOS.init({ once: true, easing: 'ease-out-cubic' });
+
+    // Lógica del Mobile Drawer (Corregida)
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
+    const drawer = document.getElementById('mobile-drawer');
+    const overlay = document.getElementById('drawer-overlay');
+
+    function openDrawer(){
+      if(drawer) drawer.classList.add('open');
+      if(overlay) overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer(){
+      if(drawer) drawer.classList.remove('open');
+      if(overlay) overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    
+    if(menuToggle) menuToggle.addEventListener('click', openDrawer);
+    if(menuClose) menuClose.addEventListener('click', closeDrawer);
+    if(overlay) overlay.addEventListener('click', closeDrawer);
+    
+    document.querySelectorAll('#mobile-drawer a').forEach(function(link){
+      link.addEventListener('click', closeDrawer);
+    });
+
+    // Lógica del Contact form
+    const form = document.getElementById('contact-form');
+    const confirmModal = document.getElementById('confirm-modal');
+    const modalClose = document.getElementById('modal-close');
+
+    if(form){
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const empresa = document.getElementById('empresa').value;
+        const email = document.getElementById('email').value;
+        const telefono = document.getElementById('telefono').value;
+        const mensaje = document.getElementById('mensaje').value;
+
+        const subject = encodeURIComponent('Nueva solicitud de contacto — ' + empresa);
+        const body = encodeURIComponent(
+          'Nombre: ' + nombre + '\n' +
+          'Empresa: ' + empresa + '\n' +
+          'Correo: ' + email + '\n' +
+          'Teléfono: ' + telefono + '\n\n' +
+          'Mensaje:\n' + mensaje
+        );
+        window.location.href = 'mailto:contact@usmxlogistics.com?subject=' + subject + '&body=' + body;
+
+        confirmModal.classList.add('open');
+        form.reset();
+      });
+    }
+
+    if(modalClose){
+      modalClose.addEventListener('click', function(){
+        confirmModal.classList.remove('open');
+      });
+    }
+    if(confirmModal){
+      confirmModal.addEventListener('click', function(e){
+        if(e.target === confirmModal) confirmModal.classList.remove('open');
+      });
+    }
+
+    // Lógica del Modal Legal
+    const legalModal = document.getElementById('legal-modal');
+    const legalTitle = document.getElementById('legal-title');
+    const legalBody = document.getElementById('legal-body');
+    const legalClose = document.getElementById('legal-close');
+
+    const legalContent = {
+      terms: {
+        title: 'Términos y Condiciones',
+        body: [
+          'El uso de este sitio y de los servicios de USMX Logistics está sujeto a la aceptación de los presentes términos.',
+          'La información publicada tiene fines informativos generales; las tarifas y tiempos de tránsito se confirman mediante cotización formal.',
+          'USMX Logistics actúa como coordinador y administrador logístico, gestionando proveedores de transporte, agentes aduanales y operadores autorizados en cada jurisdicción.',
+          'Toda operación de importación o exportación se rige adicionalmente por la normativa aduanera y comercial vigente en los países de origen y destino.'
+        ]
+      },
+      privacy: {
+        title: 'Aviso de Privacidad',
+        body: [
+          'USMX Logistics recaba los datos proporcionados en el formulario de contacto (nombre, empresa, correo, teléfono y mensaje) con el único fin de dar seguimiento a su solicitud.',
+          'Sus datos no serán compartidos con terceros ajenos a la operación logística solicitada, salvo obligación legal.',
+          'Usted puede solicitar la actualización, corrección o eliminación de sus datos escribiendo a contact@usmxlogistics.com.',
+          'Al enviar el formulario de contacto, usted acepta el tratamiento de sus datos conforme a lo aquí descrito.'
+        ]
+      }
+    };
+
+    document.querySelectorAll('.legal-trigger').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        const type = btn.getAttribute('data-type');
+        legalTitle.textContent = legalContent[type].title;
+        legalBody.innerHTML = legalContent[type].body.map(function(p){ return '<p>' + p + '</p>'; }).join('');
+        legalModal.classList.add('open');
+      });
+    });
+    
+    if(legalClose){
+      legalClose.addEventListener('click', function(){
+        legalModal.classList.remove('open');
+      });
+    }
+    if(legalModal){
+      legalModal.addEventListener('click', function(e){
+        if(e.target === legalModal) legalModal.classList.remove('open');
+      });
+    }
+    
+  });
+</script>
+</body>
+</html>
